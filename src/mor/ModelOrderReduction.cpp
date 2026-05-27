@@ -98,15 +98,19 @@ void ModelOrderReduction::export_full_state(const Eigen::VectorXd& full_state, i
     for (int i = 0; i < full_state.size(); ++i) f << full_state[i] << "\n";
 }
 
-void ModelOrderReduction::reconstruct_all_states(const Eigen::MatrixXd& Ur_mat) {
+void ModelOrderReduction::reconstruct_all_states() {
     if (case_name.empty()) {
         throw std::invalid_argument("ModelOrderReduction error: case_name cannot be empty.");
     }
+    
     fs::path xr_dir = fs::path("Exports") / case_name / "xr";
-    if (!fs::exists(xr_dir)) throw std::runtime_error("El directorio xr no existe");
+    if (!fs::exists(xr_dir)) {
+        throw std::runtime_error("Reconstruction Error: El directorio '" + xr_dir.string() + "' no existe.");
+    }
 
     std::vector<std::pair<int, std::string>> files;
     std::regex pattern("xr_(\\d+)\\.txt");
+    
     for (const auto& entry : fs::directory_iterator(xr_dir)) {
         std::string name = entry.path().filename().string();
         std::smatch match;
@@ -116,10 +120,16 @@ void ModelOrderReduction::reconstruct_all_states(const Eigen::MatrixXd& Ur_mat) 
     }
     std::sort(files.begin(), files.end());
 
+    std::cout << "[MOR] Reconstructing " << files.size() << " reduced states into full space..." << std::endl;
+
     for (const auto& pair : files) {
         int iteration = pair.first;
         auto [absolute_time, reduced_state] = read_reduced_state(pair.second);
-        Eigen::VectorXd full_state = Ur_mat * reduced_state;
+        
+        // CORRECCIÓN: Usamos 'Ur' (miembro de la clase) en lugar de 'Ur_mat'
+        Eigen::VectorXd full_state = Ur * reduced_state; 
+        
         export_full_state(full_state, iteration, absolute_time);
     }
+    std::cout << "[MOR] Full-order state reconstruction completed successfully!" << std::endl;
 }

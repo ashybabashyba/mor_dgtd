@@ -45,19 +45,31 @@ void POD_Basis::run_randomized_svd(const Eigen::MatrixXd& A, int n_components, i
     int m = A.rows(); int n = A.cols();
     int k = std::min({n_components + n_oversamples, m, n});
 
-    std::mt19937 gen(42); // Seed fija 42 igual que sklearn
+    std::mt19937 gen(42); // Fixed seed 42 to match sklearn
     std::normal_distribution<double> dist(0.0, 1.0);
     Eigen::MatrixXd Omega(n, k);
     for (int j = 0; j < k; ++j)
         for (int i = 0; i < n; ++i) Omega(i, j) = dist(gen);
 
+    std::cout << "[POD_Basis] Projecting snapshot matrix onto random subspace..." << std::endl;
     Eigen::MatrixXd Q = Eigen::HouseholderQR<Eigen::MatrixXd>(A * Omega).householderQ() * Eigen::MatrixXd::Identity(m, k);
 
+    // Safeguard: if n_iter is less than 20, set interval to 1 to print every iteration.
+    // This prevents a division by zero error (i.e., n_iter / 20 = 0).
+    int log_interval = (n_iter >= 20) ? (n_iter / 20) : 1;
+
+    std::cout << "[POD_Basis] Starting power iterations (Total iterations: " << n_iter << ")..." << std::endl;
     for (int i = 0; i < n_iter; ++i) {
         Eigen::MatrixXd Q_z = Eigen::HouseholderQR<Eigen::MatrixXd>(A.transpose() * Q).householderQ() * Eigen::MatrixXd::Identity(n, k);
         Q = Eigen::HouseholderQR<Eigen::MatrixXd>(A * Q_z).householderQ() * Eigen::MatrixXd::Identity(m, k);
+
+        // Check if we should log progress at this iteration step
+        if ((i + 1) % log_interval == 0) {
+            std::cout << "  -> Power iteration progress: " << (i + 1) << " / " << n_iter << std::endl;
+        }
     }
 
+    std::cout << "[POD_Basis] Projecting back and computing final BDCSVD on the small subspace..." << std::endl;
     Eigen::MatrixXd B = Q.transpose() * A;
     Eigen::BDCSVD<Eigen::MatrixXd> svd(B, Eigen::ComputeThinU);
     U = Q * svd.matrixU().leftCols(n_components);

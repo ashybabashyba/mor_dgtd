@@ -32,5 +32,5 @@ public:
     void export_reduced_state(const Eigen::VectorXd& reduced_state, int iteration, double dt);
     std::pair<double, Eigen::VectorXd> read_reduced_state(const std::string& file_path);
     void export_full_state(const Eigen::VectorXd& full_state, int iteration, double absolute_time);
-    void reconstruct_all_states(const Eigen::MatrixXd& Ur_mat);
+    void reconstruct_all_states();
 };
