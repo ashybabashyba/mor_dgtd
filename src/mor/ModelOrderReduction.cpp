@@ -99,7 +99,9 @@ void ModelOrderReduction::export_full_state(const Eigen::VectorXd& full_state, i
 }
 
 void ModelOrderReduction::reconstruct_all_states(const Eigen::MatrixXd& Ur_mat) {
-    if (case_name.empty()) throw std::uint56_t(1); // Requiere case_name
+    if (case_name.empty()) {
+        throw std::invalid_argument("ModelOrderReduction error: case_name cannot be empty.");
+    }
     fs::path xr_dir = fs::path("Exports") / case_name / "xr";
     if (!fs::exists(xr_dir)) throw std::runtime_error("El directorio xr no existe");
 

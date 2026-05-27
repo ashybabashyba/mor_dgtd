@@ -9,7 +9,7 @@ namespace fs = std::filesystem;
 
 MFEMHandler::MFEMHandler(const std::string& filename) : filename(filename) {}
 
-Eigen::SparseMatrix<double, Eigen::RowMajor> MFEMHandler::load_as_scipy(const std::string& file) {
+Eigen::SparseMatrix<double, Eigen::RowMajor> MFEMHandler::load_as_sparse_matrix(const std::string& file) {
     std::string target = file.empty() ? filename : file;
     std::ifstream f(target);
     if (!f.is_open()) throw std::runtime_error("No se pudo abrir el archivo CSR: " + target);

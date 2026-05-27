@@ -1,0 +1,13 @@
+{
+  "training": {
+    "snapshots_folder": "testData/2D_TFSF_MOR/initialData"
+  },
+  "model_to_evolve": {
+    "base_folder": "testData/2D_TFSF_MOR/initialData",
+    "case_prefix": "2D_TFSF_MOR"
+  },
+  "solver_options": {
+    "dt": 1e-2,
+    "final_time": 10.0
+  }
+}
