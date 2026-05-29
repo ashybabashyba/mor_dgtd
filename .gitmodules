@@ -2,3 +2,4 @@
 	path = external/dgtd
 	url = git@github.com:OpenSEMBA/dgtd.git
 	branch = carlos_mor
+    ignore = dirty
