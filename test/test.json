@@ -1,0 +1,23 @@
+{
+  "exports_dir": "external/dgtd/Exports",
+  
+  "training": {
+    "case_name": "test_training",
+    "energy_threshold": 0.99,
+    "model_order": 200,
+    "n_blocks": 5,
+    "k_svd_max": 500,
+    "filter_low_energy": true,
+    "filter_min_energy": 1e-5
+  },
+  
+  "model_to_evolve": {
+    "case_name": "test_evolve"
+  },
+  
+  "solver_options": {
+    "dt": 0.025,
+    "final_time": 10.0,
+    "case_name": "test_Output"
+  }
+}
