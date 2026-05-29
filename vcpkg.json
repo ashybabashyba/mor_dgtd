@@ -1,0 +1,8 @@
+{
+  "name": "dgtd-mor-solver",
+  "version-string": "1.0.0",
+  "dependencies": [
+    "eigen3",
+    "nlohmann-json"
+  ]
+}
