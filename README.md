@@ -85,10 +85,6 @@ The execution pipeline is entirely controlled via a JSON layout. Below is an exa
     "case_name": "2D_TFSF_MOR_evolve"
   },
   
-  "model_to_evolve": {
-    "case_name": "2D_TFSF_MOR_evolve"
-  },
-  
   "solver_options": {
     "dt": 1e-2,
     "final_time": 10.0,
